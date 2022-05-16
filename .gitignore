@@ -1,0 +1,4 @@
+db.sqlite3
+venv/Lib
+venv/Scripts
+.idea

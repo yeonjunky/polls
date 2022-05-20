@@ -1,6 +1,5 @@
 <form method="post" id="form">
   {% csrf_token %}
-
   <label for="title">title:</label>
   <input name="title" id="title" type="text">
   <button type="submit">submit</button>
@@ -17,7 +16,7 @@
 
         choice.innerHTML = `
     <label for="choice${cnt}">choice : </label>
-      <input type="text" name="choice[]" id="choice${cnt}">
+      <input type="text" name="choice_text" id="choice${cnt}">
       <button type="button" onclick="removeChoice(${cnt})">X</button>
   `
         cnt += 1

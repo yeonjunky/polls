@@ -1,7 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.forms import all_valid
+from django.forms.formsets import BaseFormSet, formset_factory
+
 from .models import Question, Choice
+from .forms import QuestionForm, ChoiceForm, BaseChoiceFormSet
+
+import re
 
 
 # Create your views here.
@@ -46,16 +52,45 @@ def vote(request, question_id):
 
 def add_poll(request):
     if request.method == "GET":
+        # question_form = QuestionForm()
+        # choice_form_set = ChoiceFormSet(extra=2)
+        #
+        # context = {'question_form': question_form, 'choice_form_set': choice_form_set}
+
         return render(request, 'polls/new_poll.html')
 
     elif request.method == "POST":
-        # new_question = Question(question_text=request.POST['title'][0]).save()
-        # print(list(request.POST['choice[]']))
-        body_dict = request.POST.getlist('choice[]')
-        print(body_dict)
-        # print(body_dict['choice[]'])
-        # for i in body_dict['choice[]']:
-        #     print(i)
-            # Choice(question=new_question, choice_text=i).save()
+        post = request.POST
+        question_text = post.get('title')
+        choices = post.getlist('choice_text')
 
-        return HttpResponseRedirect(reverse('index'))
+        valid_choices = []
+
+        print(question_text, choices)
+
+        question_form = QuestionForm(post)
+
+        ChoiceFormSet = formset_factory(ChoiceForm, formset=BaseChoiceFormSet, validate_min=2)
+        data = {
+            'form-TOTAL_FORMS': str(len(choices)),
+            'form-INITIAL_FORMS': '0',
+        }
+
+        for i, c in enumerate(choices):
+            data[f'form-{i}-choice_text'] = c
+
+        choice_formset = ChoiceFormSet(data)
+
+        if question_form.is_valid() and choice_formset.is_valid():
+            new_question = Question(question_text=question_text)
+            new_question.save()
+
+            for i in choices:
+                Choice(question=new_question, choice_text=i).save()
+
+            print("validation and save complete")
+
+            return HttpResponseRedirect(reverse('index'))
+
+        else:
+            return HttpResponse("question or choices are not valid.")

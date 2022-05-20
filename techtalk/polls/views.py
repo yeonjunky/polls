@@ -6,6 +6,7 @@ from django.forms.formsets import formset_factory
 from .models import Question, Choice
 from .forms import QuestionForm, ChoiceForm, BaseChoiceFormSet
 
+
 # Create your views here.
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
@@ -48,21 +49,12 @@ def vote(request, question_id):
 
 def add_poll(request):
     if request.method == "GET":
-        # question_form = QuestionForm()
-        # choice_form_set = ChoiceFormSet(extra=2)
-        #
-        # context = {'question_form': question_form, 'choice_form_set': choice_form_set}
-
         return render(request, 'polls/new_poll.html')
 
     elif request.method == "POST":
         post = request.POST
         question_text = post.get('title')
         choices = post.getlist('choice_text')
-
-        valid_choices = []
-
-        print(question_text, choices)
 
         question_form = QuestionForm(post)
 

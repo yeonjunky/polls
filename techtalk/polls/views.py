@@ -1,14 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.forms import all_valid
-from django.forms.formsets import BaseFormSet, formset_factory
+from django.forms.formsets import formset_factory
 
 from .models import Question, Choice
 from .forms import QuestionForm, ChoiceForm, BaseChoiceFormSet
-
-import re
-
 
 # Create your views here.
 def index(request):

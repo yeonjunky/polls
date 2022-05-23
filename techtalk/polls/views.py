@@ -69,6 +69,8 @@ def add_poll(request):
 
         choice_formset = ChoiceFormSet(data)
 
+        print(question_form.is_valid(), choice_formset.is_valid())
+
         if question_form.is_valid() and choice_formset.is_valid():
             new_question = Question(question_text=question_text)
             new_question.save()
@@ -81,4 +83,5 @@ def add_poll(request):
             return HttpResponseRedirect(reverse('index'))
 
         else:
+            print(choice_formset.errors)
             return HttpResponse("question or choices are not valid.")

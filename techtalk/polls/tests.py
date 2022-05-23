@@ -8,7 +8,7 @@ import validator
 def whitespace(strings: list):
     for i, s in enumerate(strings):
         try:
-            validator.whitespace_validator(s)
+            validator.none_str_validator(s)
         except ValidationError:
             print(f"test case {i} is not valid")
 
